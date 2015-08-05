@@ -24,6 +24,8 @@ process.source.fileNames = cms.untracked.vstring(
     #FILENAMES
     'root://xrootd.unl.edu//store/data/Run2015A/MET/RAW/v1/000/248/038/00000/DA2F1ED8-0513-E511-BBE5-02163E01451E.root'
     #"root://eoscms//eos/cms/store/data/Run2012D/MET/RAW/v1/000/208/487/02185AD3-F03D-E211-BF08-001D09F25479.root"
+    #'/store/data/Run2015A/MET/RAW/v1/000/248/038/00000/DA2F1ED8-0513-E511-BBE5-02163E01451E.root'
+    #'/store/data/Run2015A/HTMHT/RAW/v1/000/248/038/00000/341DC624-0613-E511-8D97-02163E011B15.root'
 )
 
 process.source.skipEvents = cms.untracked.uint32(0
@@ -35,7 +37,7 @@ process.source.skipEvents = cms.untracked.uint32(0
 #------------------------------------------------------------------------------------
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10
+    input = cms.untracked.int32(1000
         #PROCESSEVENTS
     )
 )
@@ -45,7 +47,7 @@ process.maxEvents = cms.untracked.PSet(
 #------------------------------------------------------------------------------------
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('file:/tmp/hsaka/Test.root')
+    fileName = cms.string('file:./TestMET.root')
 )
 
 #------------------------------------------------------------------------------------
@@ -87,6 +89,9 @@ process.load("HCALPFG.HcalTupleMaker.HcalTupleMaker_CaloJetMet_cfi")
 # Other statements
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'GR_R_75_V5A', '') # This GT includes NEF DB.
+process.hbheprerecoMethod0.setNegativeFlags          = cms.bool(True)
+process.hbheprerecoMethod2.setNegativeFlags          = cms.bool(True)
+
 #from Configuration.AlCa.autoCond_condDBv2 import autoCond
 #process.GlobalTag.globaltag = autoCond['run2_data']
 
