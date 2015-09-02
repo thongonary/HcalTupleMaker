@@ -22,11 +22,30 @@ process.source = cms.Source("PoolSource")
 
 process.source.fileNames = cms.untracked.vstring(
     #FILENAMES
-    'root://xrootd.unl.edu//store/data/Run2015A/MET/RAW/v1/000/248/038/00000/DA2F1ED8-0513-E511-BBE5-02163E01451E.root'
-    #"root://eoscms//eos/cms/store/data/Run2012D/MET/RAW/v1/000/208/487/02185AD3-F03D-E211-BF08-001D09F25479.root"
-    #'/store/data/Run2015A/MET/RAW/v1/000/248/038/00000/DA2F1ED8-0513-E511-BBE5-02163E01451E.root'
-    #'/store/data/Run2015A/HTMHT/RAW/v1/000/248/038/00000/341DC624-0613-E511-8D97-02163E011B15.root'
-)
+    #'root://xrootd.unl.edu//store/data/Run2015A/MET/RAW/v1/000/248/038/00000/DA2F1ED8-0513-E511-BBE5-02163E01451E.root'
+    #HcalHPDNoise
+    #'root://eoscms//eos/cms/store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/1E3C3B9C-B225-E511-B950-02163E012B25.root',
+    #'file:eos/cms/store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/20BE1233-C025-E511-BC18-02163E01420D.root' #broken
+    #'root://eoscms//eos/cms/store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/20BE1233-C025-E511-BC18-02163E01420D.root',
+    #'root://xrootd.unl.edu//store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/6CD1ED2F-C025-E511-9481-02163E0138F9.root',
+    #'root://xrootd.unl.edu//store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/7C498191-C025-E511-9869-02163E013953.root',
+    #'root://xrootd.unl.edu//store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/AC71AA9B-B225-E511-BE03-02163E0121CC.root',
+    #'root://xrootd.unl.edu//store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/C4D64E30-C025-E511-8DAD-02163E0125C8.root',
+    #'root://xrootd.unl.edu//store/data/Run2015B/HcalHPDNoise/RAW/v1/000/251/244/00000/CA70B42F-C025-E511-B6D6-02163E01440D.root'
+
+    #MET
+    #'file:eos/cms/store/data/Run2015B/MET/RAW/v1/000/251/244/00000/0A17C525-B525-E511-AB43-02163E0141F4.root'
+    #'file:eos/cms/store/data/Run2015B/MET/RAW/v1/000/251/244/00000/FE05BEF9-B425-E511-BD59-02163E0121CC.root' #broken
+    'file:eos/cms/store/data/Run2015B/MET/RAW/v1/000/251/251/00000/16CD9951-CA25-E511-AE31-02163E013823.root'
+
+    #SingleMuon
+    #'file:eos/cms/store/data/Run2015B/SingleMuon/RAW/v1/000/251/244/00000/121414E3-BC25-E511-A61B-02163E0134BE.root'
+    #'file:eos/cms/store/data/Run2015B/SingleMuon/RAW/v1/000/251/244/00000/22451D13-B125-E511-B5D1-02163E0133C2.root',
+    #'file:eos/cms/store/data/Run2015B/SingleMuon/RAW/v1/000/251/244/00000/26C4AB15-B125-E511-B06F-02163E0137FC.root'
+    #'file:eos/cms/store/data/Run2015B/SingleMuon/RAW/v1/000/251/244/00000/2A20CC30-B125-E511-9D25-02163E01340C.root'
+    #'file:eos/cms/store/data/Run2015B/SingleMuon/RAW/v1/000/251/244/00000/4A944B18-B125-E511-8CF7-02163E011BD1.root'
+    #'file:eos/cms/store/data/Run2015B/SingleMuon/RAW/v1/000/251/244/00000/76310675-BC25-E511-8167-02163E011D12.root'
+    )
 
 process.source.skipEvents = cms.untracked.uint32(0
     #SKIPEVENTS
@@ -37,7 +56,7 @@ process.source.skipEvents = cms.untracked.uint32(0
 #------------------------------------------------------------------------------------
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000
+    input = cms.untracked.int32(-1
         #PROCESSEVENTS
     )
 )
@@ -47,7 +66,7 @@ process.maxEvents = cms.untracked.PSet(
 #------------------------------------------------------------------------------------
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('file:./TestMET.root')
+    fileName = cms.string('file:./MET251251.root')
 )
 
 #------------------------------------------------------------------------------------
