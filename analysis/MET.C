@@ -57,6 +57,7 @@ void MET::SlaveBegin(TTree * /*tree*/)
    Energy_Count = new TH2F("Energy_Count","HBHERecHitFlagged Sum Energy vs. Count;Energy (GeV); Count",100,0,400,7,0,7);
    ChargeTS = new TH1I("ChargeTS","HBHERecHitAuxFC;TS;Charges",10,0,10);
 
+
    CleanMETx = new TH1F("CleanMETx","CleanMETx",100,-500,500); 
    CleanMETy = new TH1F("CleanMETy","CleanMETy",100,-500,500); 
    METx = new TH1F("METx","METx",100,-500,500); 
@@ -72,7 +73,7 @@ void MET::SlaveBegin(TTree * /*tree*/)
    R45_NEFFlaggedSum45 = new TH2F("R45_NEFFlaggedSum45","R45_NEFFlaggedSum45;(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
    R45_NEFNonFlaggedSum45 = new TH2F("R45_NEFNonFlaggedSum45","R45_NEFNonFlaggedSum45;(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
 
-
+   
    TS03Flagged = new TH1F("TS03Flagged","TS03Flagged;Average;Events",100,-1,1);
    TS03NonFlagged = new TH1F("TS03NonFlagged","TS03NonFlagged;Average;Events",100,-1,1);
 
@@ -161,7 +162,7 @@ Bool_t MET::Process(Long64_t entry)
         {
             vector<double> FC = (*HBHERecHitAuxFC)[i];
             R45_NEFNonFlagged->Fill((FC[4]-FC[5])/(FC[4]+FC[5]));
-            R45_NEFNonFlaggedSum45->Fill((FC[4]+FC[5]),(FC[4]-FC[5])/(FC[4]+FC[5]));
+            if (abs((*HBHERecHitIEta)[i]) != 28 && abs((*HBHERecHitIEta)[i]) != 29) R45_NEFNonFlaggedSum45->Fill((FC[4]+FC[5]),(FC[4]-FC[5])/(FC[4]+FC[5]));
             TS03NonFlagged->Fill((FC[0]+FC[1]+FC[2]+FC[3])/4);
             for (unsigned int j = 0; j < FC.size(); ++j)
             {
@@ -207,6 +208,131 @@ Bool_t MET::Process(Long64_t entry)
     //       FlaggedSumEt_Extracted->Fill((*NegativeNoiseSumEt)[0]);
     }
   }
+ 
+    // Calculate mistag rate
+   for (unsigned int i = 0; i < HBHERecHitFlags->size(); i++)
+   {
+        if (HBHERecHitEnergy->at(i) >= 0 && HBHERecHitEnergy->at(i) < 10) 
+        {
+            totalRange[0]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[0]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 10 && HBHERecHitEnergy->at(i) < 20) 
+        {
+            totalRange[1]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[1]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 20 && HBHERecHitEnergy->at(i) < 30) 
+        {
+            totalRange[2]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[2]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 30 && HBHERecHitEnergy->at(i) < 40) 
+        {
+            totalRange[3]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[3]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 40 && HBHERecHitEnergy->at(i) < 50) 
+        {
+            totalRange[4]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[4]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 50 && HBHERecHitEnergy->at(i) < 60) 
+        {
+            totalRange[5]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[5]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 60 && HBHERecHitEnergy->at(i) < 70) 
+        {
+            totalRange[6]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[6]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 70 && HBHERecHitEnergy->at(i) < 80) 
+        {
+            totalRange[7]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[7]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 80 && HBHERecHitEnergy->at(i) < 90) 
+        {
+            totalRange[8]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[8]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 90 && HBHERecHitEnergy->at(i) < 100) 
+        {
+            totalRange[9]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[9]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 100 && HBHERecHitEnergy->at(i) < 110) 
+        {
+            totalRange[10]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[10]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 110 && HBHERecHitEnergy->at(i) < 120) 
+        {
+            totalRange[11]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[11]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 120 && HBHERecHitEnergy->at(i) < 130) 
+        {
+            totalRange[12]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[12]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 130 && HBHERecHitEnergy->at(i) < 140) 
+        {
+            totalRange[13]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[13]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 140 && HBHERecHitEnergy->at(i) < 150) 
+        {
+            totalRange[14]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[14]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 150 && HBHERecHitEnergy->at(i) < 160) 
+        {
+            totalRange[15]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[15]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 160 && HBHERecHitEnergy->at(i) < 170) 
+        {
+            totalRange[16]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[16]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 170 && HBHERecHitEnergy->at(i) < 180) 
+        {
+            totalRange[17]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[17]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 180 && HBHERecHitEnergy->at(i) < 190) 
+        {
+            totalRange[18]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[18]++;
+        }
+        if (HBHERecHitEnergy->at(i) >= 190 && HBHERecHitEnergy->at(i) < 200) 
+        {
+            totalRange[19]++;
+            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
+            mistag[19]++;
+        }
+    }
    return kTRUE;
 }
 
@@ -225,7 +351,7 @@ void MET::Terminate()
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
 
-   TFile *fo = new TFile("Met_Reject_Run2015C.root","recreate");
+   TFile *fo = new TFile("SingleMuon_mistagRate.root","recreate");
    
    TH2F * FlagCorrelate = (TH2F*)fOutput->FindObject("FlagCorrelate");
    FlagCorrelate->Write();
@@ -284,6 +410,25 @@ void MET::Terminate()
    Energy_Count->Write();
    TH1I * ChargeTS = (TH1I*)fOutput->FindObject("ChargeTS");
    ChargeTS->Write();
+   
+   
+   Double_t energyRangeError[20];
+   
+   // Calculate the mistag rate
+   for (int i = 0; i < 20; i++)
+   {
+       if (mistag[i] !=0) mistag[i] = mistag[i]/totalRange[i];
+       cout << mistag[i] << "\t";
+       energyRangeError[i] = 5.;
+   }
+   cout << endl;
+   Double_t energyRange[20] = {5,15,25,35,45,55,65,75,85,95,155,115,125,135,145,155,165,175,185,195};
+   
+   Double_t mistagError[20] = {0.};
+   //Double_t testgraph[20] = {1,2.,3.,4,5,6,7,8,9,10,11,12,13,14,15,16,17,3,5,7};
+   TGraphErrors * mistagRate = new TGraphErrors(20,energyRange,mistag,energyRangeError,mistagError);
+   mistagRate->SetName("mistagRate");
+   mistagRate->Write();
    fo->Close();
-   cout << "NEF = " << NumberOfNEFFlags << "\tSpike = " << NumberOfSpikeFlags << "\t Ratio = "<< (double) NumberOfNEFFlags/NumberOfSpikeFlags << endl;
+ //  cout << "NEF = " << NumberOfNEFFlags << "\tSpike = " << NumberOfSpikeFlags << "\t Ratio = "<< (double) NumberOfNEFFlags/NumberOfSpikeFlags << endl;
 }
