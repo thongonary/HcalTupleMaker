@@ -22,7 +22,7 @@
 #include <math.h>
 #include <TVector3.h>
 #include <TH2F.h>
-
+#include <TGraphAsymmErrors.h>
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
@@ -40,9 +40,9 @@ public :
    TH1I * FlaggedCount, *FlaggedCount_Extracted, *ChargeTS;
    TH2F *FlagCorrelate, *R45_NEFFlaggedSum45, *R45_NEFNonFlaggedSum45;
     Int_t NumberOfNEFFlags, NumberOfSpikeFlags;
-   
-    Double_t mistag[20], totalRange[20], totalRate[20];
-    
+   //Int_t nbins;
+   //Double_t energyCut[11];
+   TH1F *mistag, *mistagRaw, *totalRange, *TS45, *TS456, *TS45_NEF, *TS456_NEF; 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
@@ -173,7 +173,7 @@ public :
    TBranch        *b_ls;   //!
    TBranch        *b_run;   //!
 
-   MET(TTree * /*tree*/ =0) : fChain(0), NumberOfNEFFlags(0), NumberOfSpikeFlags(0), mistag(), totalRange(), totalRate() { }
+   MET(TTree * /*tree*/ =0) : fChain(0), NumberOfNEFFlags(0), NumberOfSpikeFlags(0) { }
    virtual ~MET() { }
    virtual Int_t   Version() const { return 2; }
    virtual void    Begin(TTree *tree);

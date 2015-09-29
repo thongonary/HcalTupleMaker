@@ -73,12 +73,30 @@ void MET::SlaveBegin(TTree * /*tree*/)
    R45_NEFFlaggedSum45 = new TH2F("R45_NEFFlaggedSum45","R45_NEFFlaggedSum45;(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
    R45_NEFNonFlaggedSum45 = new TH2F("R45_NEFNonFlaggedSum45","R45_NEFNonFlaggedSum45;(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
 
-   
+   TS45 = new TH1F("TS45","TS45;TS4+TS5;NEvents",100,0,250);
+   TS45_NEF = new TH1F("TS45_NEF","TS45;TS4+TS5;NEvents",100,0,250);
+   TS456 = new TH1F("TS456","TS456;TS4+TS5+TS6;NEvents",100,0,250);
+   TS456_NEF = new TH1F("TS456_NEF","TS456;TS4+TS5+TS6;NEvents",100,0,250);
+
    TS03Flagged = new TH1F("TS03Flagged","TS03Flagged;Average;Events",100,-1,1);
    TS03NonFlagged = new TH1F("TS03NonFlagged","TS03NonFlagged;Average;Events",100,-1,1);
 
    FlagCorrelate = new TH2F("FlagCorrelate","Flag Correlation; NEF Flagged; Spike-like Flagged",2,0.,2.,2,0.,2.);
+   
+   //Double_t energyCut[] = {0.,10.,20.,30.,45.,50.,55.,60.,70.,80.,90};
+   Double_t energyCut[] = {0.,5.,10.,15.,20.,25.,30.,35.,40.,50.,60.,75,100.};
+   Int_t nbins = sizeof(energyCut)/sizeof(Double_t) - 1; 
+   mistag = new TH1F("mistag",";HBHERecHitEnergy;NEvents", nbins, energyCut);
+   mistagRaw = new TH1F("mistagRaw",";HBHERecHitEnergyRaw;NEvents", nbins, energyCut);
+   totalRange = new TH1F("totalRange",";Total;NEvents",nbins, energyCut);
 
+   fOutput->Add(mistagRaw);
+   fOutput->Add(mistag);
+   fOutput->Add(TS45_NEF);
+   fOutput->Add(TS456_NEF);
+   fOutput->Add(TS45);
+   fOutput->Add(TS456);
+   fOutput->Add(totalRange);
    fOutput->Add(R45_NEFFlaggedSum45);
    fOutput->Add(R45_NEFNonFlaggedSum45);
    fOutput->Add(FlaggedEt);
@@ -110,7 +128,7 @@ Bool_t MET::Process(Long64_t entry)
    fChain->GetTree()->GetEntry(entry);
 //   fStatus;
 
-    if (OfficialDecisionRun2L->at(0)==1 || OfficialDecisionRun2T->at(0)==1) 
+//    if (OfficialDecisionRun2L->at(0)==1 || OfficialDecisionRun2T->at(0)==1) 
   {
   // Count the number of flagged per event 
    Int_t flag_count = 0;
@@ -121,11 +139,18 @@ Bool_t MET::Process(Long64_t entry)
    // Loop through all the RecHits in 1 event. If it's flagged by NEF then print out its energy.
    for (unsigned int i = 0; i < HBHERecHitFlags->size(); i++)
    {
+       vector<double> FC = (*HBHERecHitAuxFC)[i];
+       totalRange->Fill(HBHERecHitEnergy->at(i));
+       TS45->Fill(FC[4]+FC[5]);
+       TS456->Fill(FC[4]+FC[5]+FC[6]);
         Int_t flagword = HBHERecHitFlags->at(i);
         //Int_t flagword = (*HBHERecHitFlags)[i];
         if (FlagWordDecoder(flagword,27))
         {
-
+            TS45_NEF->Fill(FC[4]+FC[5]);
+            TS456_NEF->Fill(FC[4]+FC[5]+FC[6]);
+            mistagRaw->Fill(HBHERecHitEnergyRaw->at(i));
+            mistag->Fill(HBHERecHitEnergy->at(i));
             ++NumberOfNEFFlags;
             flag_count++;
             FlaggedEnergy->Fill((*HBHERecHitEnergy)[i]);
@@ -138,7 +163,6 @@ Bool_t MET::Process(Long64_t entry)
             sumFlaggedMETy += (*HBHERecHitEnergy)[i]/cosh((*HBHERecHitEta)[i]) * sin((*HBHERecHitPhi)[i]);
             //TString msg = TString::Format("HBHERecHitEnergy[%d] = %f", i, (*HBHERecHitEnergy)[i]);
             //if (gProofServ) gProofServ->SendAsynMessage(msg);
-            vector<double> FC = (*HBHERecHitAuxFC)[i];
             R45_NEFFlagged->Fill((FC[4]-FC[5])/(FC[4]+FC[5]));
             R45_NEFFlaggedSum45->Fill((FC[4]+FC[5]),(FC[4]-FC[5])/(FC[4]+FC[5]));
             TS03Flagged->Fill((FC[0]+FC[1]+FC[2]+FC[3])/4);
@@ -209,130 +233,6 @@ Bool_t MET::Process(Long64_t entry)
     }
   }
  
-    // Calculate mistag rate
-   for (unsigned int i = 0; i < HBHERecHitFlags->size(); i++)
-   {
-        if (HBHERecHitEnergy->at(i) >= 0 && HBHERecHitEnergy->at(i) < 10) 
-        {
-            totalRange[0]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[0]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 10 && HBHERecHitEnergy->at(i) < 20) 
-        {
-            totalRange[1]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[1]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 20 && HBHERecHitEnergy->at(i) < 30) 
-        {
-            totalRange[2]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[2]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 30 && HBHERecHitEnergy->at(i) < 40) 
-        {
-            totalRange[3]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[3]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 40 && HBHERecHitEnergy->at(i) < 50) 
-        {
-            totalRange[4]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[4]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 50 && HBHERecHitEnergy->at(i) < 60) 
-        {
-            totalRange[5]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[5]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 60 && HBHERecHitEnergy->at(i) < 70) 
-        {
-            totalRange[6]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[6]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 70 && HBHERecHitEnergy->at(i) < 80) 
-        {
-            totalRange[7]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[7]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 80 && HBHERecHitEnergy->at(i) < 90) 
-        {
-            totalRange[8]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[8]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 90 && HBHERecHitEnergy->at(i) < 100) 
-        {
-            totalRange[9]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[9]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 100 && HBHERecHitEnergy->at(i) < 110) 
-        {
-            totalRange[10]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[10]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 110 && HBHERecHitEnergy->at(i) < 120) 
-        {
-            totalRange[11]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[11]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 120 && HBHERecHitEnergy->at(i) < 130) 
-        {
-            totalRange[12]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[12]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 130 && HBHERecHitEnergy->at(i) < 140) 
-        {
-            totalRange[13]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[13]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 140 && HBHERecHitEnergy->at(i) < 150) 
-        {
-            totalRange[14]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[14]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 150 && HBHERecHitEnergy->at(i) < 160) 
-        {
-            totalRange[15]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[15]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 160 && HBHERecHitEnergy->at(i) < 170) 
-        {
-            totalRange[16]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[16]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 170 && HBHERecHitEnergy->at(i) < 180) 
-        {
-            totalRange[17]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[17]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 180 && HBHERecHitEnergy->at(i) < 190) 
-        {
-            totalRange[18]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[18]++;
-        }
-        if (HBHERecHitEnergy->at(i) >= 190 && HBHERecHitEnergy->at(i) < 200) 
-        {
-            totalRange[19]++;
-            if (FlagWordDecoder(HBHERecHitFlags->at(i),27))
-            mistag[19]++;
-        }
-    }
    return kTRUE;
 }
 
@@ -351,10 +251,38 @@ void MET::Terminate()
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
 
-   TFile *fo = new TFile("SingleMuon_mistagRate.root","recreate");
+   TFile *fo = new TFile("NoBPTX_ReallyNoStandardFilter.root","recreate");
    
    TH2F * FlagCorrelate = (TH2F*)fOutput->FindObject("FlagCorrelate");
    FlagCorrelate->Write();
+   
+   TH1F * TS45 = (TH1F*)fOutput->FindObject("TS45");
+   TS45->Write();
+   TH1F * TS45_NEF = (TH1F*)fOutput->FindObject("TS45_NEF");
+   TS45_NEF->Write();
+   TGraphAsymmErrors* TS45rate = new TGraphAsymmErrors(TS45_NEF, TS45, "cp");
+   TS45rate->Write(); 
+   
+   TH1F * TS456 = (TH1F*)fOutput->FindObject("TS456");
+   TS456->Write();
+   TH1F * TS456_NEF = (TH1F*)fOutput->FindObject("TS456_NEF");
+   TS456_NEF->Write();
+   TGraphAsymmErrors* TS456rate = new TGraphAsymmErrors(TS456_NEF, TS456, "cp");
+   TS456rate->Write(); 
+   
+   TH1F * mistagRaw = (TH1F*)fOutput->FindObject("mistagRaw");
+   mistagRaw->Write();
+   
+   TH1F * mistag = (TH1F*)fOutput->FindObject("mistag");
+   mistag->Write();
+   
+   TH1F * totalRange = (TH1F*)fOutput->FindObject("totalRange");
+   totalRange->Write();
+   
+   TGraphAsymmErrors* mistagRate = new TGraphAsymmErrors(mistag, totalRange, "cp");
+   mistagRate->Write(); 
+   TGraphAsymmErrors* mistagRawRate = new TGraphAsymmErrors(mistagRaw, totalRange, "cp");
+   mistagRawRate->Write(); 
    
    TH1F * TS03Flagged = (TH1F*)fOutput->FindObject("TS03Flagged");
    TS03Flagged->Write();
@@ -410,25 +338,7 @@ void MET::Terminate()
    Energy_Count->Write();
    TH1I * ChargeTS = (TH1I*)fOutput->FindObject("ChargeTS");
    ChargeTS->Write();
-   
-   
-   Double_t energyRangeError[20];
-   
-   // Calculate the mistag rate
-   for (int i = 0; i < 20; i++)
-   {
-       if (mistag[i] !=0) mistag[i] = mistag[i]/totalRange[i];
-       cout << mistag[i] << "\t";
-       energyRangeError[i] = 5.;
-   }
-   cout << endl;
-   Double_t energyRange[20] = {5,15,25,35,45,55,65,75,85,95,155,115,125,135,145,155,165,175,185,195};
-   
-   Double_t mistagError[20] = {0.};
-   //Double_t testgraph[20] = {1,2.,3.,4,5,6,7,8,9,10,11,12,13,14,15,16,17,3,5,7};
-   TGraphErrors * mistagRate = new TGraphErrors(20,energyRange,mistag,energyRangeError,mistagError);
-   mistagRate->SetName("mistagRate");
-   mistagRate->Write();
+ 
    fo->Close();
  //  cout << "NEF = " << NumberOfNEFFlags << "\tSpike = " << NumberOfSpikeFlags << "\t Ratio = "<< (double) NumberOfNEFFlags/NumberOfSpikeFlags << endl;
 }

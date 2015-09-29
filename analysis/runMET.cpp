@@ -24,8 +24,9 @@ void runMET()
 
     TChain *c = new TChain("hcalTupleTree/tree","");
     //AddToChain(c, "inputMET.txt");
-    AddToChain(c, "inputSingleMuon.txt");
+    //AddToChain(c, "inputSingleMuon.txt");
     //AddToChain(c, "inputHPD.txt");
+    AddToChain(c, "inputNoBPTX_2015C.txt");
     //c->SetProof();
     c->Process("MET.C+g");
     //
