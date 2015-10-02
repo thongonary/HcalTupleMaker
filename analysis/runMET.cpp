@@ -9,6 +9,7 @@ void AddToChain(TChain *ch, char* inputList)
             char cs[1000];
             fileNames.getline(cs,1000);
             TString fullPath;
+            //fullPath = "root://eoscms//eos/cms/";
             fullPath = "root://eoscms//";
             fullPath+=cs;
             ch->Add(fullPath);
@@ -24,9 +25,11 @@ void runMET()
 
     TChain *c = new TChain("hcalTupleTree/tree","");
     //AddToChain(c, "inputMET.txt");
-    //AddToChain(c, "inputSingleMuon.txt");
+    AddToChain(c, "inputSingleMuon.txt");
     //AddToChain(c, "inputHPD.txt");
-    AddToChain(c, "inputNoBPTX_2015C.txt");
+    //AddToChain(c, "inputNoBPTX_2015C.txt");
+    //AddToChain(c, "inputTestSingleMuon.txt");
+    //AddToChain(c, "inputTestNoBPTX_2015C.txt");
     //c->SetProof();
     c->Process("MET.C+g");
     //

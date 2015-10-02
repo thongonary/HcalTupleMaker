@@ -35,14 +35,15 @@ public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
 // Histogram
-   TH1F * FlaggedEnergy, *FlaggedEt, *FlaggedSumEnergy, *FlaggedSumEnergy_Extracted, *FlaggedSumEt, *FlaggedSumEt_Extracted, *CleanMETx, *CleanMETy, *METx, *METy, *CleanMET, *NonCleanMET, *R45_NEFFlagged, *R45_NEFNonFlagged, *TS03Flagged, *TS03NonFlagged;
+   TH1F * FlaggedEnergy, *FlaggedEt, *FlaggedSumEnergy, *FlaggedSumEnergy_Extracted, *FlaggedSumEt, *FlaggedSumEt_Extracted, *CleanMET, *NonCleanMET, *R45_NEFFlagged, *R45_NEFNonFlagged, *TS03Flagged, *TS03NonFlagged;
    TH2F * Energy_Count, *METCorrelate;
    TH1I * FlaggedCount, *FlaggedCount_Extracted, *ChargeTS;
    TH2F *FlagCorrelate, *R45_NEFFlaggedSum45, *R45_NEFNonFlaggedSum45;
     Int_t NumberOfNEFFlags, NumberOfSpikeFlags;
    //Int_t nbins;
    //Double_t energyCut[11];
-   TH1F *mistag, *mistagRaw, *totalRange, *TS45, *TS456, *TS45_NEF, *TS456_NEF; 
+   TH1F *mistag, *mistagRaw, *totalRange, *totalRawRange, *TS45, *TS456, *TS45_NEF, *TS456_NEF, *IsolatedRechitEnergy; 
+   TH1F *mistagSpike, *mistagRawSpike, *TS45_Spike, *TS456_Spike; 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
