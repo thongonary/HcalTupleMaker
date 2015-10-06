@@ -52,17 +52,12 @@ void MET::SlaveBegin(TTree * /*tree*/)
    //FlaggedSumEnergy_Extracted = new TH1F("FlaggedSumEnergy_Extracted","HBHERecHitFlaggedSumEnergy extracted ;Energy (GeV); Events/(7.0 GeV)",100,0,700);
    FlaggedSumEt = new TH1F("FlaggedSumEt","HBHERecHitFlaggedSumEt;Et (GeV); Events/(7.0 GeV)",100,0,400);
 //   FlaggedSumEt_Extracted = new TH1F("FlaggedSumEt_Extracted","HBHERecHitFlaggedSumEt extracted ;Et (GeV); Events/(7.0 GeV)",100,0,700);
-   FlaggedCount = new TH1I("FlaggedCount","HBHERecHit Flagged Count; Count; Events",7,0,7);
+   FlaggedCount = new TH1I("FlaggedCount","HBHERecHit Flagged Count; #Rechits NEF-flagged; Events",7,0,7);
  //  FlaggedCount_Extracted = new TH1I("FlaggedCount_Extracted","HBHERecHit Flagged Count extracted; Count; Events",5,0,5);
    Energy_Count = new TH2F("Energy_Count","HBHERecHitFlagged Sum Energy vs. Count;Energy (GeV); Count",100,0,400,7,0,7);
    ChargeTS = new TH1I("ChargeTS","HBHERecHitAuxFC;TS;Charges",10,0,10);
 
 
-   CleanMETx = new TH1F("CleanMETx","CleanMETx",100,-500,500); 
-   CleanMETy = new TH1F("CleanMETy","CleanMETy",100,-500,500); 
-   METx = new TH1F("METx","METx",100,-500,500); 
-   METy = new TH1F("METy","METy",100,-500,500); 
-   
    CleanMET = new TH1F("CleanMET","Cleaned Hcal MET;Hcal MET (GeV);Events/(5 GeV)",100,0,300); 
    NonCleanMET = new TH1F("NonCleanMET","Orignal Hcal MET;Hcal MET (GeV);Events/(5 GeV)",100,0,300); 
    METCorrelate = new TH2F("METCorrelate","METCorrelate;Original Hcal MET (GeV); NEF Cleaned Hcal MET (GeV)",100,0,300,100,0,300);
@@ -70,33 +65,56 @@ void MET::SlaveBegin(TTree * /*tree*/)
    R45_NEFFlagged = new TH1F("R45_NEFFlagged","R45_NEFFlagged;(TS4-TS5)/(TS4+TS5);Events",100,-1.5,1.5);
    R45_NEFNonFlagged = new TH1F("R45_NEFNonFlagged","R45_NEFNonFlagged;(TS4-TS5)/(TS4+TS5);Events",100,-30,30);
    
-   R45_NEFFlaggedSum45 = new TH2F("R45_NEFFlaggedSum45","R45_NEFFlaggedSum45;(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
-   R45_NEFNonFlaggedSum45 = new TH2F("R45_NEFNonFlaggedSum45","R45_NEFNonFlaggedSum45;(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
-
-   TS45 = new TH1F("TS45","TS45;TS4+TS5;NEvents",100,0,250);
-   TS45_NEF = new TH1F("TS45_NEF","TS45;TS4+TS5;NEvents",100,0,250);
-   TS456 = new TH1F("TS456","TS456;TS4+TS5+TS6;NEvents",100,0,250);
-   TS456_NEF = new TH1F("TS456_NEF","TS456;TS4+TS5+TS6;NEvents",100,0,250);
-
+   R45_NEFFlaggedSum45 = new TH2F("R45_NEFFlaggedSum45","R45_NEFFlaggedSum45 (fC);(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
+   R45_NEFNonFlaggedSum45 = new TH2F("R45_NEFNonFlaggedSum45","R45_NEFNonFlaggedSum45 (fC);(TS4+TS5);(TS4-TS5)/(TS4+TS5)",100,0,1000,100,-1.5,1.5);
+   
    TS03Flagged = new TH1F("TS03Flagged","TS03Flagged;Average;Events",100,-1,1);
    TS03NonFlagged = new TH1F("TS03NonFlagged","TS03NonFlagged;Average;Events",100,-1,1);
 
    FlagCorrelate = new TH2F("FlagCorrelate","Flag Correlation; NEF Flagged; Spike-like Flagged",2,0.,2.,2,0.,2.);
-   
-   //Double_t energyCut[] = {0.,10.,20.,30.,45.,50.,55.,60.,70.,80.,90};
-   Double_t energyCut[] = {0.,5.,10.,15.,20.,25.,30.,35.,40.,50.,60.,75,100.};
+  /* 
+   Double_t energyCut[] = {0.,5.,10.,15.,20.,25.,30.,35.,40.,50.,60.,75.,90.,110.};
+   Double_t energyRawCut[] = {0.,5.,10.,15.,20.,25.,30.,35.,40.,50.,60.,75.,90.,110.};
    Int_t nbins = sizeof(energyCut)/sizeof(Double_t) - 1; 
-   mistag = new TH1F("mistag",";HBHERecHitEnergy;NEvents", nbins, energyCut);
-   mistagRaw = new TH1F("mistagRaw",";HBHERecHitEnergyRaw;NEvents", nbins, energyCut);
-   totalRange = new TH1F("totalRange",";Total;NEvents",nbins, energyCut);
+   Int_t nbinsRaw = sizeof(energyRawCut)/sizeof(Double_t) - 1; 
+   */
+   mistag = new TH1F("mistag",";HBHERecHitEnergy (GeV);NEvents", 120,0,120);
+   mistagRaw = new TH1F("mistagRaw",";HBHERecHitEnergyRaw (GeV);NEvents", 120,0,120);
+   totalRawRange = new TH1F("totalRawRange",";HBHERecHitEnergyRaw (GeV);NEvents",120,0,120);
+   totalRange = new TH1F("totalRange",";HBHERecHitEnergy (GeV);NEvents",120,0,120);
+   mistagSpike = new TH1F("mistagSpike",";HBHERecHitEnergy (GeV);NEvents", 120,0,120);
+   mistagRawSpike = new TH1F("mistagRawSpike",";HBHERecHitEnergyRaw (GeV);NEvents", 120,0,120);
+  /* 
+   Double_t TS45Cut[] = {0.,50.,70.,100.,130.,160.,200.,300.,400.,800.};
+   Double_t TS456Cut[] = {0.,50.,70.,100.,130.,160.,200.,300.,400.,800.};
+   Int_t nbins45 = sizeof(TS45Cut)/sizeof(Double_t) - 1; 
+   Int_t nbins456 = sizeof(TS456Cut)/sizeof(Double_t) - 1; 
+*/
+   TS45 = new TH1F("TS45","TS45;TS4+TS5 (fC);NEvents",40,0,800);
+   TS45_NEF = new TH1F("TS45_NEF","TS45;TS4+TS5 (fC);NEvents",40,0,800);
+   TS456 = new TH1F("TS456","TS456;TS4+TS5+TS6 (fC);NEvents",40,0,800);
+   TS456_NEF = new TH1F("TS456_NEF","TS456;TS4+TS5+TS6 (fC);NEvents",40,0,800);
 
+   TS45_Spike = new TH1F("TS45_Spike","TS45;TS4+TS5 (fC);NEvents",40,0,800);
+   TS456_Spike = new TH1F("TS456_Spike","TS456;TS4+TS5+TS6 (fC);NEvents",40,0,800);
+
+//   Double_t threshold[] = {0.,5.,10.,15.,20.,25.,30.,35.,40.,50.,60.};
+//   Int_t nbinsThreshold = sizeof(threshold)/sizeof(Double_t) - 1; 
+   IsolatedRechitEnergy = new TH1F("IsolatedRechitEnergy",";Isolated Rechit Energy (GeV);NEvents",100,0,100);
+
+   fOutput->Add(IsolatedRechitEnergy);
    fOutput->Add(mistagRaw);
    fOutput->Add(mistag);
+   fOutput->Add(totalRawRange);
+   fOutput->Add(totalRange);
+   fOutput->Add(mistagRawSpike);
+   fOutput->Add(mistagSpike);
    fOutput->Add(TS45_NEF);
    fOutput->Add(TS456_NEF);
    fOutput->Add(TS45);
    fOutput->Add(TS456);
-   fOutput->Add(totalRange);
+   fOutput->Add(TS45_Spike);
+   fOutput->Add(TS456_Spike);
    fOutput->Add(R45_NEFFlaggedSum45);
    fOutput->Add(R45_NEFNonFlaggedSum45);
    fOutput->Add(FlaggedEt);
@@ -109,12 +127,8 @@ void MET::SlaveBegin(TTree * /*tree*/)
 //   fOutput->Add(FlaggedCount_Extracted);
    fOutput->Add(Energy_Count);
    fOutput->Add(ChargeTS);
-   fOutput->Add(CleanMETx);
-   fOutput->Add(CleanMETy);
    fOutput->Add(CleanMET);
    fOutput->Add(NonCleanMET);
-   fOutput->Add(METx);
-   fOutput->Add(METy);
    fOutput->Add(METCorrelate);
    fOutput->Add(R45_NEFFlagged);
    fOutput->Add(R45_NEFNonFlagged);
@@ -128,7 +142,7 @@ Bool_t MET::Process(Long64_t entry)
    fChain->GetTree()->GetEntry(entry);
 //   fStatus;
 
-//    if (OfficialDecisionRun2L->at(0)==1 || OfficialDecisionRun2T->at(0)==1) 
+   // if (OfficialDecisionRun2L->at(0)==1 || OfficialDecisionRun2T->at(0)==1) 
   {
   // Count the number of flagged per event 
    Int_t flag_count = 0;
@@ -136,11 +150,42 @@ Bool_t MET::Process(Long64_t entry)
    Float_t sum_et = 0;
    Float_t sumFlaggedMETx = 0;
    Float_t sumFlaggedMETy = 0;
+      
+   // Select only events with isolated rechit to see its energy distribution
+#if 0
+   for (unsigned int i = 0; i < HBHERecHitFlags->size(); i++)
+   {
+   Bool_t IsolatedRecHit = true;
+      if (HBHERecHitEnergy->at(i) > 2.)
+          for (unsigned int j = 0; j < HBHERecHitFlags->size(); j++)
+                {
+                    if (HBHERecHitIEta->at(j) == HBHERecHitIEta->at(i))
+                            if (HBHERecHitIPhi->at(j) == (HBHERecHitIPhi->at(i)+1) || HBHERecHitIPhi->at(j) == (HBHERecHitIPhi->at(i)-1))
+                            if (HBHERecHitEnergy->at(j) > 2.)
+                                IsolatedRecHit = false;
+                }
+      if (IsolatedRecHit) IsolatedRechitEnergy->Fill(HBHERecHitEnergy->at(i)); 
+   }
+#endif
+
    // Loop through all the RecHits in 1 event. If it's flagged by NEF then print out its energy.
    for (unsigned int i = 0; i < HBHERecHitFlags->size(); i++)
    {
+   Bool_t IsolatedRecHit = true;
+      if (HBHERecHitEnergy->at(i) > 2.)
+          for (unsigned int j = 0; j < HBHERecHitFlags->size(); j++)
+                {
+                    if (HBHERecHitIEta->at(j) == HBHERecHitIEta->at(i))
+                            if (HBHERecHitIPhi->at(j) == (HBHERecHitIPhi->at(i)+1) || HBHERecHitIPhi->at(j) == (HBHERecHitIPhi->at(i)-1))
+                            if (HBHERecHitEnergy->at(j) > 2.)
+                                IsolatedRecHit = false;
+                }
+//      if (IsolatedRecHit) 
+      {
+       IsolatedRechitEnergy->Fill(HBHERecHitEnergy->at(i)); 
        vector<double> FC = (*HBHERecHitAuxFC)[i];
        totalRange->Fill(HBHERecHitEnergy->at(i));
+       totalRawRange->Fill(HBHERecHitEnergyRaw->at(i));
        TS45->Fill(FC[4]+FC[5]);
        TS456->Fill(FC[4]+FC[5]+FC[6]);
         Int_t flagword = HBHERecHitFlags->at(i);
@@ -202,18 +247,22 @@ Bool_t MET::Process(Long64_t entry)
             //cout << endl;
             }
         }
-        if (FlagWordDecoder(flagword,13)) ++NumberOfSpikeFlags;     
+        if (FlagWordDecoder(flagword,13)) 
+        {
+            ++NumberOfSpikeFlags;     
+            TS45_Spike->Fill(FC[4]+FC[5]);
+            TS456_Spike->Fill(FC[4]+FC[5]+FC[6]);
+            mistagRawSpike->Fill(HBHERecHitEnergyRaw->at(i));
+            mistagSpike->Fill(HBHERecHitEnergy->at(i));
+        }
+        }
    }
    
   
    TVector3 METvector(HBET->at(0)+HEET->at(0), HBET->at(1)+HEET->at(1),0);
-   METx->Fill(METvector.x());
-   METy->Fill(METvector.y());
    
    Double_t noncleanMET = sqrt(pow(METvector.x(),2)+pow(METvector.y(),2));
    NonCleanMET->Fill(noncleanMET);
-   CleanMETx->Fill(METvector.x()-sumFlaggedMETx);
-   CleanMETy->Fill(METvector.y()-sumFlaggedMETy);
    Double_t cleanMET = sqrt(pow(METvector.x()-sumFlaggedMETx,2)+pow(METvector.y()-sumFlaggedMETy,2));
    CleanMET->Fill(cleanMET);
    METCorrelate->Fill(noncleanMET,cleanMET);
@@ -251,7 +300,7 @@ void MET::Terminate()
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
 
-   TFile *fo = new TFile("NoBPTX_ReallyNoStandardFilter.root","recreate");
+   TFile *fo = new TFile("SingleMuon_WithoutStandardFilter.root","recreate");
    
    TH2F * FlagCorrelate = (TH2F*)fOutput->FindObject("FlagCorrelate");
    FlagCorrelate->Write();
@@ -263,6 +312,11 @@ void MET::Terminate()
    TGraphAsymmErrors* TS45rate = new TGraphAsymmErrors(TS45_NEF, TS45, "cp");
    TS45rate->Write(); 
    
+   TH1F * TS45_Spike =  (TH1F*)fOutput->FindObject("TS45_Spike");
+   TS45_Spike->Write();
+   TGraphAsymmErrors* TS45Spikerate = new TGraphAsymmErrors(TS45_Spike, TS45, "cp");
+   TS45Spikerate->Write(); 
+   
    TH1F * TS456 = (TH1F*)fOutput->FindObject("TS456");
    TS456->Write();
    TH1F * TS456_NEF = (TH1F*)fOutput->FindObject("TS456_NEF");
@@ -270,19 +324,29 @@ void MET::Terminate()
    TGraphAsymmErrors* TS456rate = new TGraphAsymmErrors(TS456_NEF, TS456, "cp");
    TS456rate->Write(); 
    
+   TH1F * TS456_Spike = (TH1F*)fOutput->FindObject("TS456_Spike");
+   TS456_Spike->Write();
+   TGraphAsymmErrors* TS456Spikerate = new TGraphAsymmErrors(TS456_Spike, TS456, "cp");
+   TS456Spikerate->Write(); 
+   
    TH1F * mistagRaw = (TH1F*)fOutput->FindObject("mistagRaw");
    mistagRaw->Write();
    
    TH1F * mistag = (TH1F*)fOutput->FindObject("mistag");
    mistag->Write();
    
+   TH1F * totalRawRange = (TH1F*)fOutput->FindObject("totalRawRange");
+   totalRawRange->Write();
    TH1F * totalRange = (TH1F*)fOutput->FindObject("totalRange");
    totalRange->Write();
    
    TGraphAsymmErrors* mistagRate = new TGraphAsymmErrors(mistag, totalRange, "cp");
    mistagRate->Write(); 
-   TGraphAsymmErrors* mistagRawRate = new TGraphAsymmErrors(mistagRaw, totalRange, "cp");
+   TGraphAsymmErrors* mistagRawRate = new TGraphAsymmErrors(mistagRaw, totalRawRange, "cp");
    mistagRawRate->Write(); 
+   
+   TH1F * IsolatedRechitEnergy = (TH1F*)fOutput->FindObject("IsolatedRechitEnergy");
+   IsolatedRechitEnergy->Write();
    
    TH1F * TS03Flagged = (TH1F*)fOutput->FindObject("TS03Flagged");
    TS03Flagged->Write();
@@ -302,20 +366,12 @@ void MET::Terminate()
    TH2F * R45_NEFNonFlaggedSum45 = (TH2F*)fOutput->FindObject("R45_NEFNonFlaggedSum45");
    R45_NEFNonFlaggedSum45->Write();
    
-   TH1F * METx = (TH1F*)fOutput->FindObject("METx");
-   METx->Write();
-   TH1F * METy = (TH1F*)fOutput->FindObject("METy");
-   METy->Write();
    TH1F * METCorrelate = (TH1F*)fOutput->FindObject("METCorrelate");
    METCorrelate->Write();
    TH1F * CleanMET = (TH1F*)fOutput->FindObject("CleanMET");
    CleanMET->Write();
    TH1F * NonCleanMET = (TH1F*)fOutput->FindObject("NonCleanMET");
    NonCleanMET->Write();
-   TH1F * CleanMETx = (TH1F*)fOutput->FindObject("CleanMETx");
-   CleanMETx->Write();
-   TH1F * CleanMETy = (TH1F*)fOutput->FindObject("CleanMETy");
-   CleanMETy->Write();
    TH1F * FlaggedEt = (TH1F*)fOutput->FindObject("FlaggedEt");
    FlaggedEt->Write();
    TH1F * FlaggedEnergy = (TH1F*)fOutput->FindObject("FlaggedEnergy");
